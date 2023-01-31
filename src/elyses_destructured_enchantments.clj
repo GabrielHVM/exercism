@@ -31,12 +31,10 @@
 (defn insert-face-cards
   "Returns the deck with face cards between its head and tail."
   [[first-card & rest-of-deck :as deck]]
-  (let [add-face-cards #(partial conj "jack" "queen" "king")]
+  (let [add-face-cards #(apply conj % (reverse face-cards))]
     (if (empty? deck)
-      (add-face-cards)
+      (vec (add-face-cards '()))
       (-> (or rest-of-deck '())
-          (conj "king")
-          (conj "queen")
-          (conj "jack")
+          add-face-cards
           (conj first-card)
           vec))))
