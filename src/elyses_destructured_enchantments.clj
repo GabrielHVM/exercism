@@ -14,15 +14,15 @@
   "Returns the deck with first two items reversed."
   [[first-card second-card & rest]]
   (-> rest
-       (conj first-card)
-       (conj second-card)
+      (conj first-card)
+      (conj second-card)
       vec))
 
 (defn discard-top-card
   "Returns a sequence containing the first card and
    a sequence of the remaining cards in the deck."
   [[top-card-deck & rest]]
-  (->> (vec rest)
+  (->> (and rest (vec rest))
        (conj [] top-card-deck)))
 
 (def face-cards
@@ -30,5 +30,13 @@
 
 (defn insert-face-cards
   "Returns the deck with face cards between its head and tail."
-  [deck]
-  )
+  [[first-card & rest-of-deck :as deck]]
+  (let [add-face-cards #(partial conj "jack" "queen" "king")]
+    (if (empty? deck)
+      (add-face-cards)
+      (-> (or rest-of-deck '())
+          (conj "king")
+          (conj "queen")
+          (conj "jack")
+          (conj first-card)
+          vec))))
